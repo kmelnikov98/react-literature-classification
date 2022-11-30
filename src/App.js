@@ -1,35 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
-import LoginButton from './components/LoginButton';
-import LogoutButton from './components/LogoutButton';
-import Profile from './components/Profile';
+import { Route, Routes } from "react-router-dom";
+import Profile from './views/Profile';
+import Home from './views/Home';
+import NavBar from './components/nav-bar';
 import { useAuth0 } from '@auth0/auth0-react'
+import ProtectedRoute from './auth/protected-route';
 
 function App() {
-  const { isLoading } = useAuth0()
+  const { isLoading, user } = useAuth0()
 
   if (isLoading) {
-    return <div> Loading ... </div>
+    return <div> Loading ... </div> // can return component here instead
   }
+  
   return (
-    <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-      <LoginButton/>
-      <LogoutButton/>
-      <Profile/>
+    <div id="app" className="d-flex flex-column h-100">
+      <NavBar />
+      <div className="container flex-grow-1">
+        <Routes> {/* switch is used to render one view at a time; if no switch, then they all render at once */}
+          <Route path="/" element={<Home/>} />
+          <Route path="/profile" element={
+            <ProtectedRoute user={user}>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          {/* <ProtectedRoute path="/external-api" component={ExternalApi} /> */}
+        </Routes>
+      </div>
     </div>
   );
 }
