@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Routes } from "react-router-dom";
 import Profile from './views/Profile';
 import Home from './views/Home';
+import ExternalApi from './views/ExternalApi';
 import NavBar from './components/nav-bar';
 import { useAuth0 } from '@auth0/auth0-react'
 import ProtectedRoute from './auth/protected-route';
@@ -24,7 +25,11 @@ function App() {
               <Profile />
             </ProtectedRoute>
           } />
-          {/* <ProtectedRoute path="/external-api" component={ExternalApi} /> */}
+          <Route path="/external-api" element={
+            <ProtectedRoute user={user}>
+              <ExternalApi />
+            </ProtectedRoute>
+          } />
         </Routes>
       </div>
     </div>
