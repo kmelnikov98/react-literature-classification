@@ -6,8 +6,8 @@
  const cors = require("cors");
  const helmet = require("helmet");
  const { clientOrigins, serverPort } = require("./config/env.dev");
-
  const { messagesRouter } = require("./messages/messages.router");
+const { userRouter } = require("./user/user");
  
  /**
   * App Variables
@@ -28,6 +28,7 @@
  app.use("/api", apiRouter);
  //init all the files that you will use to run the server/all endpoints
  apiRouter.use("/messages", messagesRouter); //why do we use express.Router()
+ apiRouter.use("/user", userRouter);
  //Basically, saying that for anything that has the route "/messages," you must go to messages.router.js, which provide a set of API requests, like post, get, create, etc
  //you can have different files, and in the index, just link them to gether. for example, if you had /postcards, you would have a postcards.js file. this file would handle different api requests like get, post etc..
 
@@ -36,13 +37,11 @@
 //  .get((req, res) => {})
 //  .post((req, res) => {})
 //instead of doing this, we should make a seperate file!
- 
  app.use(function (err, req, res, next) {
    console.log(err);
    res.status(500).send(err.message);
  });
  
-
  /**
   * Server Activation
   */
