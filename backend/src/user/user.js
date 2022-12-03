@@ -21,11 +21,17 @@ client.connect(err => {
 });
 
 const userCollection = client.db("user").collection("user-info-collection");
+
 userRouter.post('/add-user', (req, res) => {
-    console.log(req.body)
+    if(userCollection.findOne({ sub: req.body.sub })) { // if element already exists, then don't add it
+        console.log("User already exist")
+        return res.json(401)
+    }
+
     userCollection.insertOne(req.body)
     .then(result => {
-        res.redirect('/') //send a response back; in thisc ase, we dont want to send anything so redirect back to origin
+        res.json(200)
+        //res.redirect('/') //send a response back; in thisc ase, we dont want to send anything so redirect back to origin
         console.log(result)
     })
     .catch(error => console.log(error))
@@ -34,17 +40,15 @@ userRouter.post('/add-user', (req, res) => {
 userRouter.put('/update-user', (req, res) => {
     console.log(req.body)
     // find one field with the name John
-    userCollection.findOneAndUpdate(
+     userCollection.findOneAndUpdate(
         { name: 'John'}, //filter search by
+        { sub: req.body.sub}, //filter search by
         { //update field 
             $set: {
                 name: req.body.name,
-                quote: req.body.quote
+                quote: req.body.quote,
             }
         },
-        {
-            upsert: true //an option: states that if no entry john exists then insert a new entry
-        }
     ).then(result => {
         res.json("Success") //send success message back to frontend javascript.
     }).catch(error => console.error(error))

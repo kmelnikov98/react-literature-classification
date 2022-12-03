@@ -33,7 +33,6 @@
  
  messagesRouter.get("/public-message", (req, res) => {
    const message = getPublicMessage();
-   console.log("Here")
    res.status(200).send(message);
    //res.send sends an HTTP response (back to client), can be displayed in console.
  });

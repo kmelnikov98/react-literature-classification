@@ -4,7 +4,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 const ExternalApi = () => {
     const [message, setMessage] = useState('');
     const serverUrl = process.env.REACT_APP_SERVER_URL;
-
     const { getAccessTokenSilently } = useAuth0();
 
     const callApi = async () => {
@@ -24,6 +23,7 @@ const ExternalApi = () => {
     const callSecureApi = async () => {
         try {
             const token = await getAccessTokenSilently();
+            console.log(token)
 
             const response = await fetch(
                 `${serverUrl}/api/messages/protected-message`,
