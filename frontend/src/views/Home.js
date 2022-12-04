@@ -18,15 +18,13 @@ const Home = () => {
   return(
   <div>
     <div className="box">
-      <input ref={videoLinkInputRef} className="form-control form-control-lg" type="text" placeholder="Enter a music video..."></input>
-      <div className="buttonContainer">
+      <input ref={videoLinkInputRef} className="form-control form-control-lg" type="text" placeholder="Enter a youtube music video..."></input>
         <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-primary ms-2"
             onClick={handleVideoLink}>
             Search
         </button>
-      </div>
     </div>
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
