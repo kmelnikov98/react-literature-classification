@@ -1,0 +1,16 @@
+.box {
+    display: flex;
+    flex-flow: row;
+    height: 100%;
+  }
+
+.containerBox {
+    display: flex;
+    margin: auto;
+    flex-flow: column;
+}
+
+  .buttonContainer {
+        margin-left: 5px;
+        height: 100%;
+  }
