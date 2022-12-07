@@ -8,6 +8,7 @@
  const { clientOrigins, serverPort } = require("./config/env.dev");
  const { messagesRouter } = require("./messages/messages.router");
 const { userRouter } = require("./user/user");
+const { musicRouter } = require("./music/classify-music-genre")
  
  /**
   * App Variables
@@ -29,6 +30,7 @@ const { userRouter } = require("./user/user");
  //init all the files that you will use to run the server/all endpoints
  apiRouter.use("/messages", messagesRouter); //why do we use express.Router()
  apiRouter.use("/user", userRouter);
+ apiRouter.use("/music", musicRouter);
  //Basically, saying that for anything that has the route "/messages," you must go to messages.router.js, which provide a set of API requests, like post, get, create, etc
  //you can have different files, and in the index, just link them to gether. for example, if you had /postcards, you would have a postcards.js file. this file would handle different api requests like get, post etc..
 

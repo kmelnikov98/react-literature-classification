@@ -51,20 +51,36 @@ def nearestClass(neighbors):
         if response in classVote:
             classVote[response]+=1 
         else:
-            classVote[response]=1 
+            classVote[response]=1
     sorter = sorted(classVote.items(), key = operator.itemgetter(1), reverse=True)
+    print(sorter)
     return sorter[0][0]
 results=defaultdict(int)
-i=1
-for folder in os.listdir("./Data/genres_original/"):
-    results[i]=folder
-    i+=1
+# results based off the genres found in the GTZAN Dataset - Music Genre Classification
+results = {
+    1: 'blues',
+    2: 'classical',
+    3: 'country',
+    4: 'disco',
+    5: 'hiphop',
+    6: 'jazz',
+    7: 'metal',
+    8: 'pop',
+    9: 'reggae',
+    10: 'rock'
+}
 
-(rate,sig)=wav.read("./test.wav")
-mfcc_feat=mfcc(sig,rate,winlen=0.020,appendEnergy=False, nfft=960)
+# i=1
+# for folder in os.listdir("./Data/genres_original/"):
+#     results[i]=folder
+#     i+=1
+
+print(results)
+(rate,sig)=wav.read("./sstest.wav")
+mfcc_feat=mfcc(sig, rate ,winlen=0.020, appendEnergy=False, nfft=960)
 covariance = np.cov(np.matrix.transpose(mfcc_feat))
 mean_matrix = mfcc_feat.mean(0)
 feature=(mean_matrix,covariance,0)
-pred=nearestClass(getNeighbors(dataset ,feature , 7))
+pred=nearestClass(getNeighbors(dataset, feature, 5))
 print(results)
 print(results[pred])
