@@ -49,32 +49,12 @@ musicRouter.get("/get-music-genre", async (req, res) => {
     })
 
     var params = {
-        FunctionName: 'myImageProcessingLambdaFn', /* required */
-        Payload: "PAYLOAD_AS_A_STRING"
+        FunctionName: 'classify-music-genre-lambda', /* required */
+        Payload: ""
       };
       
     const result = await new AWS.Lambda().invoke(params).promise();
     console.log(result)
-
-
-
-    options = {
-        method: "GET",
-        headers: {
-            "x-rapidapi-key": process.env.YOUTUBE_API_KEY,
-            "x-rapidapi-host": process.env.YOUTUBE_API_HOST,
-        }
-    }
-
-    // const rapidAPIResponse = await fetch(`https://youtube-mp36.p.rapidapi.com/dl?id=${videoId}`, options)
-    // const rapidAPIData = await rapidAPIResponse.json();
-
-    // if(rapidAPIData.status == "ok") {
-    //     return res.json(rapidAPIData)
-    // }
-    // else {
-    //     res.json("Error in sending rapid API data")
-    // }
 });
 
 module.exports = {
