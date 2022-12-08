@@ -1,7 +1,6 @@
 const express = require("express");
 const fetch = require("node-fetch");
 var AWS = require("aws-sdk");
-const fs = require("fs")
 const stream = require('stream');
 const musicRouter = express.Router(); //mini application linked to our server
 
