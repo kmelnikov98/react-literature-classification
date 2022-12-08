@@ -36,11 +36,6 @@ musicRouter.get("/get-music-genre", async (req, res) => {
         const passtrough = new stream.PassThrough();
         data.pipe(passtrough)
 
-        const s3 = new AWS.S3({
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-        })
-
         const upload = new AWS.S3.ManagedUpload({
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
