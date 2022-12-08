@@ -16,7 +16,8 @@ const Home = () => {
         const response = await fetch(
             `${serverUrl}/api/music/get-music-genre?videoId=${videoId}`);
         
-        const responseData = await response.json();
+        const responseData = await response;
+        console.log("hello")
         console.log(responseData)
         //setMusicGenre(responseData.musicGenre)
         //setLink(responseData.link)
