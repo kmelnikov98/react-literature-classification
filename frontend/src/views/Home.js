@@ -5,42 +5,36 @@ import MusicGenre from "../components/MusicGenre";
 
 const Home = () => {
   const videoLinkInputRef = React.useRef(null);
-  const [videoUrl, setVideoUrl] = React.useState("");
+  const [videoId, setVideoId] = React.useState("");
+  const [videoLink, setLink] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const [musicGenre, setMusicGenre] = React.useState('');
 
-  const getMusicGenre = async ({ videoId }) => {
-
-    const videoInfo = {
-      videoId: videoId,
-    }
-
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(videoInfo)
-      };
-  
+  const getMusicGenre = videoId => async () => {
     try {
-        const response = await fetch(
-            `${serverUrl}/api/music/get-music-genre`, requestOptions
-        );
 
+        const response = await fetch(
+            `${serverUrl}/api/music/get-music-genre?videoId=${videoId}`);
+        
         const responseData = await response.json();
-        setMusicGenre(responseData.message);
+        console.log(responseData)
+        //setMusicGenre(responseData.musicGenre)
+        //setLink(responseData.link)
     } catch (error) {
         console.log(error)
     }
 };
 
-  let videoId; //undefined initially
-  if(videoUrl) {
-    videoId = videoUrl.split("v=")[1].split("&")[0];
-    setMusicGenre(getMusicGenre(videoId))
-  }
-
   const handleVideoLink = () => {
-    setVideoUrl(videoLinkInputRef.current.value);
+    let videoUrl = videoLinkInputRef.current.value;
+
+    if(!videoUrl) {
+      return
+    }
+
+    setVideoId(videoUrl.split("v=")[1].split("&")[0]);
+    console.log(videoId)
+    setMusicGenre(getMusicGenre(videoId))
   };
 
   return(
@@ -57,6 +51,7 @@ const Home = () => {
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
       <MusicGenre className="musicGenre" musicGenre={musicGenre}/>
+      {/* <a href="https://mdelta.123tokyo.xyz/get.php/5/e7/sewad1OnOC8.mp3?cid=MmEwMTo0Zjg6YzAxMDo5ZmE2OjoxfE5BfERF&h=LPDc3a_4wwiUMpD6-fbl3g&s=1670453678&n=_UICIDEBOY_%20-%20Audubon" download>Click to download</a> */}
     </div>
   </div>
   )

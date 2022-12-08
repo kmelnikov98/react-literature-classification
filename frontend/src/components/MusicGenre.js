@@ -1,10 +1,10 @@
 import React from 'react'
 import "../styles/musicGenre.css"
 
-const MusicGenre = ({ MusicGenre }) => {
+const MusicGenre = () => {
 
   return (
-    MusicGenre && <h3 className="musicGenreContainer"> { MusicGenre } </h3>
+   <h3 className="musicGenreContainer"> Hi </h3>
   )
 }
 
