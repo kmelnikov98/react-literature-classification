@@ -6,59 +6,20 @@ import os
 import pickle
 import random 
 import operator
-from io import BytesIO
-import json
-import sys
-from dotenv import load_dotenv
 import math
 import numpy as np
-import boto3
 from collections import defaultdict
-from boto3.session import Session
 dataset = []
 
-load_dotenv()
-ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
-SECRET_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-BUCKET_NAME = os.getenv('WAV_FILE_UPLOADS_BUCKET')
-
-s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-datafile_key, test_wavfile = "dataset.dat", "sstest.wav"  # replace object key
-datafile = s3.get_object(Bucket=BUCKET_NAME, Key=datafile_key)["Body"].read()
-wavfile = s3.get_object(Bucket=BUCKET_NAME, Key=test_wavfile)["Body"].read()
-dataset_wrapper = BytesIO(datafile)
-
-def lambda_handler(event, context):
-    results = {
-        1: 'blues',
-        2: 'classical',
-        3: 'country',
-        4: 'disco',
-        5: 'hiphop',
-        6: 'jazz',
-        7: 'metal',
-        8: 'pop',
-        9: 'reggae',
-        10: 'rock'
-    }
-
-    wrapper = BytesIO(wavfile)
-    (rate, sig) = wav.read(wrapper)
-    mfcc_feat=mfcc(sig, rate ,winlen=0.020, appendEnergy=False, nfft=960)
-    covariance = np.cov(np.matrix.transpose(mfcc_feat))
-    mean_matrix = mfcc_feat.mean(0)
-    feature=(mean_matrix,covariance,0)
-    pred=nearestClass(getNeighbors(dataset, feature, 5))
-    print(results[pred], flush=True, end='')
-
 def loadDataset(filename):
-    with filename as f:
+    with open(filename , 'rb') as f:
         while True:
             try:
                 dataset.append(pickle.load(f))
             except EOFError:
+                f.close()
                 break
-loadDataset(dataset_wrapper)
+loadDataset("dataset.dat")
 
 def distance(instance1 , instance2 , k ):
     distance =0 
@@ -94,8 +55,32 @@ def nearestClass(neighbors):
     sorter = sorted(classVote.items(), key = operator.itemgetter(1), reverse=True)
     print(sorter)
     return sorter[0][0]
+results=defaultdict(int)
+# results based off the genres found in the GTZAN Dataset - Music Genre Classification
+results = {
+    1: 'blues',
+    2: 'classical',
+    3: 'country',
+    4: 'disco',
+    5: 'hiphop',
+    6: 'jazz',
+    7: 'metal',
+    8: 'pop',
+    9: 'reggae',
+    10: 'rock'
+}
 
-if __name__ == '__main__':
-    args_list = json.loads(sys.argv[1])
-    print(args_list)
-    lambda_handler(None, None)
+# i=1
+# for folder in os.listdir("./Data/genres_original/"):
+#     results[i]=folder
+#     i+=1
+
+print(results)
+(rate,sig)=wav.read("./sstest.wav")
+mfcc_feat=mfcc(sig, rate ,winlen=0.020, appendEnergy=False, nfft=960)
+covariance = np.cov(np.matrix.transpose(mfcc_feat))
+mean_matrix = mfcc_feat.mean(0)
+feature=(mean_matrix,covariance,0)
+pred=nearestClass(getNeighbors(dataset, feature, 5))
+print(results)
+print(results[pred])
