@@ -4,20 +4,16 @@ import numpy as np
 from tempfile import TemporaryFile
 import os
 import pickle
-import random 
 import operator
 from io import BytesIO
-import json
 import sys
 from dotenv import load_dotenv
-import math
 import numpy as np
 import boto3
-from collections import defaultdict
-from boto3.session import Session
+
 dataset = []
 
-def lambda_handler(dataset, wavfile):
+def lambda_handler(dataset, wrapper):
     results = {
         1: 'blues',
         2: 'classical',
@@ -31,7 +27,6 @@ def lambda_handler(dataset, wavfile):
         10: 'rock'
     }
 
-    wrapper = BytesIO(wavfile)
     (rate, sig) = wav.read(wrapper)
     mfcc_feat=mfcc(sig, rate ,winlen=0.020, appendEnergy=False, nfft=960)
     covariance = np.cov(np.matrix.transpose(mfcc_feat))
@@ -83,21 +78,23 @@ def nearestClass(neighbors):
         else:
             classVote[response]=1
     sorter = sorted(classVote.items(), key = operator.itemgetter(1), reverse=True)
-    print(sorter)
     return sorter[0][0]
 
 if __name__ == '__main__':
-    # args_list = json.loads(sys.argv[1])
-    # print(args_list)
+    wavFileId = ""
+    if len(sys.argv) == 2:
+        wavFileId = sys.argv[1] + '.wav'
+
     load_dotenv()
     ACCESS_KEY = os.getenv('AWS_ACCESS_KEY_ID')
     SECRET_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     BUCKET_NAME = os.getenv('WAV_FILE_UPLOADS_BUCKET')
 
     s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
-    datafile_key, test_wavfile = "dataset.dat", "sstest.wav"  # replace object key
+    datafile_key, wavfile_key = "dataset.dat", wavFileId  # replace object key
     datafile = s3.get_object(Bucket=BUCKET_NAME, Key=datafile_key)["Body"].read()
-    wavfile = s3.get_object(Bucket=BUCKET_NAME, Key=test_wavfile)["Body"].read()
+    wavfile = s3.get_object(Bucket=BUCKET_NAME, Key=wavfile_key)["Body"].read()
+    wavfile_wrapper = BytesIO(wavfile)
     dataset_wrapper = BytesIO(datafile)
     dataset = loadDataset(dataset_wrapper)
-    lambda_handler(dataset, wavfile)
+    lambda_handler(dataset, wavfile_wrapper)

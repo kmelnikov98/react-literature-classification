@@ -6,7 +6,6 @@ import MusicGenre from "../components/MusicGenre";
 const Home = () => {
   const videoLinkInputRef = React.useRef(null);
   const [videoId, setVideoId] = React.useState("");
-  const [videoLink, setLink] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const [musicGenre, setMusicGenre] = React.useState('');
 
@@ -16,9 +15,9 @@ const Home = () => {
         const response = await fetch(
             `${serverUrl}/api/music/get-music-genre?videoId=${videoId}`);
         
-        const responseData = await response;
-        console.log("hello")
-        console.log(responseData)
+        const responseData = await response.json();
+        console.log(responseData.genre);
+
         //setMusicGenre(responseData.musicGenre)
         //setLink(responseData.link)
     } catch (error) {
@@ -27,16 +26,19 @@ const Home = () => {
 };
 
   const handleVideoLink = () => {
+    console.log(videoLinkInputRef.current.value)
     let videoUrl = videoLinkInputRef.current.value;
 
     if(!videoUrl) {
       return
     }
 
-    setVideoId(videoUrl.split("v=")[1].split("&")[0]);
-    console.log(videoId)
+    let videoId = videoUrl.split("v=")[1].split("&")[0]
+    //set doesnt mutate immediately so we have to use local variable instead and pass it to API
+    setVideoId(videoId);
     setMusicGenre(getMusicGenre(videoId))
   };
+
 
   return(
   <div>
@@ -52,7 +54,6 @@ const Home = () => {
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
       <MusicGenre className="musicGenre" musicGenre={musicGenre}/>
-      {/* <a href="https://mdelta.123tokyo.xyz/get.php/5/e7/sewad1OnOC8.mp3?cid=MmEwMTo0Zjg6YzAxMDo5ZmE2OjoxfE5BfERF&h=LPDc3a_4wwiUMpD6-fbl3g&s=1670453678&n=_UICIDEBOY_%20-%20Audubon" download>Click to download</a> */}
     </div>
   </div>
   )
