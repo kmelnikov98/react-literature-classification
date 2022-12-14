@@ -7,25 +7,26 @@ const Home = () => {
   const videoLinkInputRef = React.useRef(null);
   const [videoId, setVideoId] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const [musicGenre, setMusicGenre] = React.useState('');
+  const [musicGenre, setMusicGenre] = React.useState("");
 
-  const getMusicGenre = videoId => async () => {
+  const classifyMusicGenre = async (videoId) => {
+    console.log("here")
+    let genre = ""
+
     try {
-
         const response = await fetch(
             `${serverUrl}/api/music/get-music-genre?videoId=${videoId}`);
         
         const responseData = await response.json();
-        console.log(responseData.genre);
-
-        //setMusicGenre(responseData.musicGenre)
-        //setLink(responseData.link)
+        genre = responseData.genre
     } catch (error) {
         console.log(error)
     }
+
+    return genre
 };
 
-  const handleVideoLink = () => {
+  const handleVideoLink = async () => {
     console.log(videoLinkInputRef.current.value)
     let videoUrl = videoLinkInputRef.current.value;
 
@@ -35,8 +36,9 @@ const Home = () => {
 
     let videoId = videoUrl.split("v=")[1].split("&")[0]
     //set doesnt mutate immediately so we have to use local variable instead and pass it to API
-    setVideoId(videoId);
-    setMusicGenre(getMusicGenre(videoId))
+    setVideoId(videoId)
+    let genre = await classifyMusicGenre(videoId) //API call is made after button click
+    setMusicGenre(genre)
   };
 
 

@@ -1,0 +1,19 @@
+.chip {
+    /* Center the content */
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+
+    /* Background color */
+    background-color: #d1d5db;
+
+    /* Rounded border */
+    border-radius: 9999px;
+
+    /* Spacing */
+    padding: 0.25rem 0.5rem;
+}
+
+.chip-content {
+    margin-right: 0.25rem;
+}
