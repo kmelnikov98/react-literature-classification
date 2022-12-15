@@ -1,9 +1,15 @@
 import React from 'react'
 import "../styles/musicGenre.css"
-import Dropdown from 'react-bootstrap/Dropdown'; //react-bootstrap is what we have installed in terms of components
+import Spinner from 'react-bootstrap/Spinner';
 import Chip from './Chip';
 
-const MusicGenre = ({ musicGenre }) => {
+const MusicGenre = ({ musicGenre, isLoading }) => {
+
+  if (isLoading) {
+    return (
+      <Spinner animation="border" />
+    )
+  }
   return (
     musicGenre && <div>  
       <Chip label={musicGenre}/>

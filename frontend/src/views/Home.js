@@ -8,10 +8,13 @@ const Home = () => {
   const [videoId, setVideoId] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const [musicGenre, setMusicGenre] = React.useState("");
+  const [isGenreLoading, setLoading] = React.useState("");
 
   const classifyMusicGenre = async (videoId) => {
     console.log("here")
     let genre = ""
+    
+    setLoading(true)
 
     try {
         const response = await fetch(
@@ -23,6 +26,7 @@ const Home = () => {
         console.log(error)
     }
 
+    setLoading(false)
     return genre
 };
 
@@ -55,7 +59,7 @@ const Home = () => {
     </div>
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
-      <MusicGenre className="musicGenre" musicGenre={musicGenre}/>
+      <MusicGenre className="musicGenre" musicGenre={musicGenre} isLoading={isGenreLoading}/>
     </div>
   </div>
   )
