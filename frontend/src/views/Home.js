@@ -11,7 +11,6 @@ const Home = () => {
   const [isGenreLoading, setLoading] = React.useState("");
 
   const classifyMusicGenre = async (videoId) => {
-    console.log("here")
     let genre = ""
     
     setLoading(true)
@@ -59,7 +58,7 @@ const Home = () => {
     </div>
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
-      <MusicGenre className="musicGenre" musicGenre={musicGenre} isLoading={isGenreLoading}/>
+      <MusicGenre musicGenre={musicGenre} isLoading={isGenreLoading}/>
     </div>
   </div>
   )

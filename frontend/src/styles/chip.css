@@ -8,12 +8,10 @@
     background-color: #d1d5db;
 
     /* Rounded border */
-    border-radius: 9999px;
-
-    /* Spacing */
-    padding: 0.25rem 0.5rem;
+    border-radius: 50px;
 }
 
 .chip-content {
     margin-right: 0.25rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
 }

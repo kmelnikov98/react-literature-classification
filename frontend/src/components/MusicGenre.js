@@ -7,12 +7,15 @@ const MusicGenre = ({ musicGenre, isLoading }) => {
 
   if (isLoading) {
     return (
-      <Spinner animation="border" />
+      <div className='loadingGenreContainer'>  
+        <Spinner animation="border" style={{ width: "4rem", height: "4rem" }} />
+        <div className="fs-2" style={{ marginTop: "15px" }}> Classifying Music Genre...</div>
+      </div>
     )
   }
   return (
-    musicGenre && <div>  
-      <Chip label={musicGenre}/>
+    musicGenre && <div className='musicGenreContainer' style={{ fontSize: "55px"}}>  
+      <Chip label={musicGenre} />
   </div>
   )
 }
