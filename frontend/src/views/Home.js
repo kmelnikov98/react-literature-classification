@@ -7,27 +7,34 @@ const Home = () => {
   const videoLinkInputRef = React.useRef(null);
   const [videoId, setVideoId] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
-  const [musicGenre, setMusicGenre] = React.useState("");
   const [isGenreLoading, setLoading] = React.useState("");
 
-  const classifyMusicGenre = async (videoId) => {
-    let genre = ""
-    
+
+
+  const postMusicLink = async (videoId) => {
     setLoading(true)
 
+    const videoInfo = {
+      videoId: videoId
+    }
+    
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(videoInfo)
+      };
+
     try {
-        const response = await fetch(
-            `${serverUrl}/api/music/get-music-genre?videoId=${videoId}`);
+        await fetch(
+            `${serverUrl}/api/music/post-music`, requestOptions);
         
-        const responseData = await response.json();
-        genre = responseData.genre
     } catch (error) {
         console.log(error)
     }
-
     setLoading(false)
-    return genre
 };
+
+
 
   const handleVideoLink = async () => {
     console.log(videoLinkInputRef.current.value)
@@ -40,10 +47,8 @@ const Home = () => {
     let videoId = videoUrl.split("v=")[1].split("&")[0]
     //set doesnt mutate immediately so we have to use local variable instead and pass it to API
     setVideoId(videoId)
-    let genre = await classifyMusicGenre(videoId) //API call is made after button click
-    setMusicGenre(genre)
+    await postMusicLink(videoId) //API call is made after button click
   };
-
 
   return(
   <div>
@@ -58,7 +63,7 @@ const Home = () => {
     </div>
     <div className="containerBox">
       <YoutubeVideo videoId={videoId}/>
-      <MusicGenre musicGenre={musicGenre} isLoading={isGenreLoading}/>
+      <MusicGenre isLoading={isGenreLoading} videoId={videoId}/>
     </div>
   </div>
   )
