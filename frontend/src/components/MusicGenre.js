@@ -55,8 +55,7 @@ const MusicGenre = ({ videoId, isLoading }) => {
       </div>
     )
   }
-  else if(!musicGenre || musicGenre === "") {
-    console.log("hey")
+  else if(videoId !== "" && (!musicGenre || musicGenre === "")) {
     return(
       <div className='loadingGenreContainer' style={{ fontSize: "100px"}}>  
         <button type="button" className="btn btn-primary lg-2" style={{ fontSize: "27px"}}
@@ -66,7 +65,7 @@ const MusicGenre = ({ videoId, isLoading }) => {
     )
   }
   else {
-    return (
+    return musicGenre && (
       <div className='musicGenreContainer' style={{ fontSize: "55px"}}>  
         <Chip label={musicGenre} />
     </div>
