@@ -15,7 +15,7 @@ const MusicGenre = ({ videoId, isLoading }) => {
 
   useEffect(() => {
     setMusicGenre("") //reset music genre on re-render
-},[videoId]) // <-- here put the parameter to listen - trigger useEffect when optional parameter is changed
+  },[videoId]) // <-- here put the parameter to listen - trigger useEffect when optional parameter is changed
 // if no optional param specified, then use effect is called on re-render
 
   const classifyMusicGenre = async (videoId) => {

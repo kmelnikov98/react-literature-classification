@@ -2,6 +2,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 var AWS = require("aws-sdk");
 const stream = require('stream');
+var getYoutubeTitle = require('get-youtube-title');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
@@ -83,7 +84,6 @@ musicRouter.post("/post-music", async (req, res) => {
    
 });
 
-
 musicRouter.get("/get-music-genre", async (req, res) => {
   const videoId = req.query.videoId
   console.log(videoId)
@@ -107,28 +107,34 @@ musicRouter.get("/get-music-genre", async (req, res) => {
 });
 
 
+musicRouter.get("/get-music-title", async (req, res) => {
+  const videoId = req.query.videoId
+  console.log(videoId)
 
-// musicRouter.get("/get-music-genre", async (req, res) => {
-//     const videoId = req.query.videoId
-//     console.log(videoId)
+  if(!videoId || videoId == "") {
+      return res.json("No video selected")
+  }
 
-//     if(!videoId || videoId == "") {
-//         return res.json("No video selected")
-//     }
+  const options = {
+    method: 'GET',
+    headers: {
+      "x-rapidapi-key": process.env.YOUTUBE_API_VIDEO_INFO_KEY,
+      "x-rapidapi-host": process.env.YOUTUBE_API_VIDEO_INFO_HOST,
+    }
+  };
+  try {
+    const rapidAPIResponse = await fetch(`https://youtube-video-info.p.rapidapi.com/video_formats?video=${videoId}`, options)
+    const rapidAPIData = await rapidAPIResponse.json();
+    const videoInfo = {videoTitle: rapidAPIData.VideoTitle}
+    res.status(200).send(videoInfo)
+  }
+  catch(error) {
+    console.log(error)
+    res.status(500)
+  }
+ 
+});
 
-//     AWS.config.update({
-//         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-//     })
-
-//     var params = {
-//         FunctionName: 'classify-music-genre-lambda', /* required */
-//         Payload: ""
-//       };
-      
-//     const result = await new AWS.Lambda().invoke(params).promise();
-//     console.log(result)
-// });
 
 module.exports = {
     musicRouter,

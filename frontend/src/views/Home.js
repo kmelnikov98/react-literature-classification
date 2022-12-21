@@ -19,10 +19,14 @@ const Home = () => {
       userId = user?.sub
     }
 
+    let videoTitle = await getMusicTitle(videoId)
+    console.log(videoTitle)
+
     const videoInfo = {
       videoId: videoId,
       userId : userId,
-      videoUrl: videoUrl
+      videoUrl: videoUrl,
+      videoTitle: videoTitle,
     }
     
     const requestOptions = {
@@ -41,7 +45,22 @@ const Home = () => {
     setLoading(false)
 };
 
+  const getMusicTitle = async (videoId) => {
+    let videoTitle = ""
+    try {
+      const response = await fetch(
+          `${serverUrl}/api/music/get-music-title?videoId=${videoId}`);
 
+
+      const responseData = await response.json();
+      videoTitle = responseData.videoTitle
+
+    } catch (error) {
+        console.log(error)
+    }
+
+    return videoTitle
+  }
 
   const handleVideoLink = async () => {
     console.log(videoLinkInputRef.current.value)
