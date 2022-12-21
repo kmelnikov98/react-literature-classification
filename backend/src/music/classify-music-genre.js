@@ -2,11 +2,16 @@ const express = require("express");
 const fetch = require("node-fetch");
 var AWS = require("aws-sdk");
 const stream = require('stream');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 const { runMusicClassifyScript } = require("./run-classification-script");
 const musicRouter = express.Router(); //mini application linked to our server
+
+const uri =`mongodb+srv://${process.env.MONGO_DB_CLIENT_INFO}@cluster0.7wgin9t.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 musicRouter.post("/post-music", async (req, res) => {
     const videoId = req.body.videoId
@@ -59,7 +64,18 @@ musicRouter.post("/post-music", async (req, res) => {
             res.status(401).send('Failed to get music info')
           } else {
             console.log('done uploading file');
-            res.status(200).send('successfully uploading file')
+            const userMusicCollection = client.db("user").collection("user-music-link");
+
+            if(req.body.userId) {
+              userMusicCollection.insertOne(req.body)
+              .then(result => {
+                  console.log("Successfully stored user with video link")
+                  //res.redirect('/') //send a response back; in thisc ase, we dont want to send anything so redirect back to origin
+                  console.log(result)
+              })
+            }
+
+            res.status(200).send('successfully uploaded file data')
   
           }
         })

@@ -2,20 +2,27 @@ import React from "react";
 import "../styles/home.css"
 import YoutubeVideo from "../components/YoutubeVideo";
 import MusicGenre from "../components/MusicGenre";
+import { useAuth0 } from '@auth0/auth0-react'
 
 const Home = () => {
   const videoLinkInputRef = React.useRef(null);
   const [videoId, setVideoId] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const [isGenreLoading, setLoading] = React.useState("");
+  const { user, isAuthenticated } = useAuth0();
 
-
-
-  const postMusicLink = async (videoId) => {
+  const postMusicLink = async (videoId, videoUrl) => {
     setLoading(true)
 
+    let userId = ""
+    if(isAuthenticated) {
+      userId = user?.sub
+    }
+
     const videoInfo = {
-      videoId: videoId
+      videoId: videoId,
+      userId : userId,
+      videoUrl: videoUrl
     }
     
     const requestOptions = {
@@ -47,7 +54,7 @@ const Home = () => {
     let videoId = videoUrl.split("v=")[1].split("&")[0]
     //set doesnt mutate immediately so we have to use local variable instead and pass it to API
     setVideoId(videoId)
-    await postMusicLink(videoId) //API call is made after button click
+    await postMusicLink(videoId, videoUrl) //API call is made after button click
   };
 
   return(
