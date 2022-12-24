@@ -28,6 +28,8 @@ const MusicGenre = ({ videoId, isLoading }) => {
         
         const responseData = await response.json();
         genre = responseData.genre
+        await storeGenreResults(videoId, genre) // must store the results of the genre to this user results.
+
     } catch (error) {
         console.log(error)
     }
@@ -35,7 +37,34 @@ const MusicGenre = ({ videoId, isLoading }) => {
     return genre
   };
 
+  const storeGenreResults = async (videoId, videoGenre) => {
 
+    let userId = ""
+    if(isAuthenticated) {
+      userId = user?.sub
+    }
+
+    const videoInfo = {
+      genre: videoGenre,
+      userId: userId,
+      videoId: videoId
+    }
+    
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(videoInfo)
+      };
+
+
+    try {
+        await fetch(
+            `${serverUrl}/api/user-music/update-user-music`, requestOptions);
+        
+    } catch (error) {
+        console.log(error)
+    }
+  }
 
   const handleMusicGenreClassification = async () => {
 

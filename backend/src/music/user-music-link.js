@@ -23,9 +23,26 @@ userMusicLinkRouter.get('/get-user-music', async (req, res) => {
     catch {
         res.status(500).send("Failed to grab user music data")
     }
-   
+})
 
+userMusicLinkRouter.put('/update-user-music', async (req, res) => {
+    console.log(req.body.userId)
+    console.log(req.body.videoId)
+    console.log(req.body.genre)
 
+    const query = { userId: req.body.userId, videoId: req.body.videoId }
+    try {
+        userMusicCollection.updateMany(query, {
+             $set: {
+                musicGenre: req.body.genre
+             }
+        })
+        console.log("Completed music genre transfer")
+        res.status(200).send("Successfully updated with the music genre")
+    }
+    catch {
+        res.status(500).send("Failed to grab user music data")
+    }
 })
 
 module.exports = {

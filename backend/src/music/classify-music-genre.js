@@ -86,7 +86,6 @@ musicRouter.post("/post-music", async (req, res) => {
 
 musicRouter.get("/get-music-genre", async (req, res) => {
   const videoId = req.query.videoId
-  console.log(videoId)
 
   if(!videoId || videoId == "") {
       return res.json("No video selected")
@@ -109,7 +108,6 @@ musicRouter.get("/get-music-genre", async (req, res) => {
 
 musicRouter.get("/get-music-title", async (req, res) => {
   const videoId = req.query.videoId
-  console.log(videoId)
 
   if(!videoId || videoId == "") {
       return res.json("No video selected")
@@ -134,7 +132,6 @@ musicRouter.get("/get-music-title", async (req, res) => {
   }
  
 });
-
 
 module.exports = {
     musicRouter,

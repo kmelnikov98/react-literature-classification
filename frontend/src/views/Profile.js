@@ -48,7 +48,7 @@ const Profile = () => {
                         </div>
                         <Badge bg="primary" pill>
                         {/* we eventually want this to be the actual genre!! */}
-                        {index + 1} 
+                        {item.musicGenre ? item.musicGenre : "Not Classified"} 
                         </Badge>
                       </ListGroup.Item>
                 ))}
