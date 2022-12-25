@@ -11,8 +11,7 @@ const YoutubeVideo = ({ videoId }) => {
     };
 
     return (
-        videoId && (<div>
-          <h3> Youtube Video</h3>
+        videoId && (<div style={{ marginTop: "1rem" }}>
           <YouTube videoId={videoId} opts={opts}/>
         </div>
     ));

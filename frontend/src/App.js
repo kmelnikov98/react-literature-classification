@@ -45,7 +45,7 @@ const storeUserProfile = async () => {
   }
 
   return (
-    <div id="app" className="d-flex flex-column h-100">
+    <div id="app" className="d-flex flex-column h-110">
       <NavBar />
       <div className="container flex-grow-1">
         <Routes> {/* switch is used to render one view at a time; if no switch, then they all render at once */}

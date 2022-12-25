@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/home.css"
 import YoutubeVideo from "../components/YoutubeVideo";
 import MusicGenre from "../components/MusicGenre";
+import InfoBoard from "../components/InfoBoard";
 import { useAuth0 } from '@auth0/auth0-react'
 
 const Home = () => {
@@ -91,6 +92,7 @@ const Home = () => {
       <YoutubeVideo videoId={videoId}/>
       <MusicGenre isLoading={isGenreLoading} videoId={videoId}/>
     </div>
+    <InfoBoard/>
   </div>
   )
 };
