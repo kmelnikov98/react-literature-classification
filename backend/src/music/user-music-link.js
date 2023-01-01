@@ -1,5 +1,6 @@
 const express = require("express");
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { checkJwt } = require("../authz/check-jwt");
 
 const userMusicLinkRouter = express.Router();
 const uri =`mongodb+srv://${process.env.MONGO_DB_CLIENT_INFO}@cluster0.7wgin9t.mongodb.net/?retryWrites=true&w=majority`;
@@ -7,9 +8,7 @@ const uri =`mongodb+srv://${process.env.MONGO_DB_CLIENT_INFO}@cluster0.7wgin9t.m
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 const userMusicCollection = client.db("user").collection("user-music-link");
 
-userMusicLinkRouter.get('/get-user-music', async (req, res) => {
-    console.log(req.query.userId)
-    // find one field with the name John
+userMusicLinkRouter.get('/get-user-music', checkJwt, async (req, res) => {
     const query = { userId: req.query.userId}
     
     try {
@@ -25,7 +24,7 @@ userMusicLinkRouter.get('/get-user-music', async (req, res) => {
     }
 })
 
-userMusicLinkRouter.put('/update-user-music', async (req, res) => {
+userMusicLinkRouter.put('/update-user-music', checkJwt, async (req, res) => {
     console.log(req.body.userId)
     console.log(req.body.videoId)
     console.log(req.body.genre)

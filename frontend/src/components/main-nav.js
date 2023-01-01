@@ -13,11 +13,11 @@ const MainNav = () => (
       className={({ isActive }) => "nav-link" + (isActive ?  " active" : "")}>
       Profile
     </NavLink>
-    <NavLink
+    {/* <NavLink
       to="/external-api"
       className={({ isActive }) => "nav-link" + (isActive ?  " active" : "")}>
       External API
-    </NavLink>
+    </NavLink> */}
   </div>
 );
 

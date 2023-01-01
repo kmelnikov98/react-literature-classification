@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 const MusicGenre = ({ videoId, isLoading }) => {
 
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [musicGenre, setMusicGenre] = React.useState("");
   const [isClassificationInProgress, setClassificationProgress] = React.useState("");
   const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -21,6 +21,7 @@ const MusicGenre = ({ videoId, isLoading }) => {
   const classifyMusicGenre = async (videoId) => {
     let genre = ""
     setClassificationProgress(true)
+    
 
     try {
         const response = await fetch(
@@ -40,9 +41,13 @@ const MusicGenre = ({ videoId, isLoading }) => {
   const storeGenreResults = async (videoId, videoGenre) => {
 
     let userId = ""
-    if(isAuthenticated) {
-      userId = user?.sub
+
+    if(!isAuthenticated) {
+      return 
     }
+
+    userId = user?.sub
+    const token = await getAccessTokenSilently();
 
     const videoInfo = {
       genre: videoGenre,
@@ -52,7 +57,10 @@ const MusicGenre = ({ videoId, isLoading }) => {
     
     const requestOptions = {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(videoInfo)
       };
 

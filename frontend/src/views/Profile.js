@@ -5,7 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Badge from 'react-bootstrap/Badge';
 
 const Profile = () => {
-    const { user, isAuthenticated } =  useAuth0();
+    const { user, isAuthenticated, getAccessTokenSilently } =  useAuth0();
     const [userMusicList, setUserMusicList] = React.useState([]);
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -14,8 +14,15 @@ const Profile = () => {
             //infinite re-render is caused as the function is re-created every single time page is re-rendered, causing a loop
             const getUserMusic = async (userId) => { //declare function inside useEffect hook, since otherwise it will infinitely re-render
                 try {
+                    const token = await getAccessTokenSilently();
+
                     const response = await fetch(
-                        `${serverUrl}/api/user-music/get-user-music?userId=${userId}`);
+                        `${serverUrl}/api/user-music/get-user-music?userId=${userId}`,  
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
                     
                     const responseData = await response.json();
                     setUserMusicList(responseData)
